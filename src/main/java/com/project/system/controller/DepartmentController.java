@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("/departments")
@@ -27,13 +26,6 @@ public class DepartmentController {
     @ApiOperation("Departments list page")
     public String listDepartments(Model model) {
         var departments = departmentService.findAll();
-        /*
-        var parentDepartment = departmentService.findRoot();
-        List<Department> departments = null;
-        departments.add(parentDepartment);
-        while (parentDepartment.getChildren().isEmpty()) {
-        }
-         */
 
         model.addAttribute("departments", departments);
         return "departments/list";

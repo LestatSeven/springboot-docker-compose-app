@@ -1,6 +1,5 @@
 package com.project.system.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +15,8 @@ import java.util.List;
 @Table(name = "departments")
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "departments_id_gen")
+    @SequenceGenerator(name = "departments_id_gen", sequenceName = "departments_id_seq", allocationSize = 1)
     @Column(name = "id")
     Integer id;
 
