@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    image: spring-postgress-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
+      - SPRING_DATASOURCE_USERNAME=postgres_user
+      - SPRING_DATASOURCE_PASSWORD=postgres_pass
+      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_GENERATE_DDL=false
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_DATA_REST_BASE_PATH=/api
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+      - FLYWAY_URL=jdbc:postgresql://db:5432/system_test
+      - FLYWAY_USER=postgres_user
+      - FLYWAY_PASSWORD=postgres_pass
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+  db:
+    image: postgres:13-alpine
+    container_name: db
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=system_test
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_pass
+volumes:
+  database_data:
+    driver: local

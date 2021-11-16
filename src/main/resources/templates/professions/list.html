@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Должности</title>
+
+    <th:block th:include="_fragments/styles :: styles"></th:block>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar}"></div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            
+            <div class="page-heading">
+                <h3>Должности</h3>
+            </div>
+            <div class="page-content">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="profession: ${professions}">
+                                        <td th:text="${profession.getName()}"></td>
+                                        <td>
+                                            <span class="badge bg-success">Active</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            
+                </section>
+            </div>
+        
+        </div>
+    </div>
+
+    <th:block th:include="_fragments/scripts :: scripts"></th:block>
+    <script>
+        let datatable = $("#table1").DataTable()
+    </script>
+</body>
+
+</html>
