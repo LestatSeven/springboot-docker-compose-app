@@ -10,7 +10,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Slf4j
 @Entity
 @Table(name = "employees")
@@ -19,22 +18,22 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employees_id_gen")
     @SequenceGenerator(name = "employees_id_gen", sequenceName = "employees_id_seq", allocationSize = 1)
     @Column(name = "id")
-    Integer id;
+    private Integer id;
 
     @Column(name = "first_name")
-    String firstName;
+    private String firstName;
 
     @Column(name = "last_name")
-    String lastName;
+    private String lastName;
 
     @Column(name = "middle_name")
-    String middleName;
+    private String middleName;
 
     @Column(name = "email")
-    String email;
+    private String email;
 
     @Column(name = "phone_number")
-    String phoneNumber;
+    private String phoneNumber;
 
     public String getFullName() {
         return this.lastName + " " + this.firstName + " " + this.middleName;

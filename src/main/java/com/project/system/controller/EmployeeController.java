@@ -31,6 +31,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/showFormForAdd")
+    @ApiOperation("Form for adding employee")
     public String showFormForAdd(Model model) {
         Employee employee = new Employee();
         model.addAttribute("employee", employee);
@@ -39,6 +40,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/save")
+    @ApiOperation("Saving new or edited employee object")
     public String saveEmployee(@ModelAttribute("employee") Employee employee) {
         employeeService.save(employee);
 
@@ -46,6 +48,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/showFormForUpdate")
+    @ApiOperation("Form for updating employee")
     public String showFormForUpdate(@RequestParam("id") Integer id, Model model) {
         Employee employee = employeeService.findById(id);
         model.addAttribute("employee", employee);
@@ -54,7 +57,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/delete")
-    public String delete(@RequestParam("id") Integer id) {
+    @ApiOperation("Delete employee by id")
+    public String deleteEmployee(@RequestParam("id") Integer id) {
         employeeService.deleteById(id);
 
         return "redirect:/employees/list";

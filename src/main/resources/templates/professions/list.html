@@ -24,12 +24,15 @@
             </div>
             <div class="page-content">
                 <section class="section">
+                    <div class="card-header d-flex justify-content-between">
+                        <a th:href="@{/professions/showFormForAdd}" class="btn btn-outline-primary">Добавить</a>
+                    </div>
                     <div class="card">
                         <div class="card-body">
                             <table class="table" id="table1">
                                 <thead>
                                     <tr>
-                                        <th>Название</th>
+                                        <th>Наименование</th>
                                         <th>Статус</th>
                                     </tr>
                                 </thead>
@@ -38,7 +41,8 @@
                                     <tr th:each="profession: ${professions}">
                                         <td th:text="${profession.getName()}"></td>
                                         <td>
-                                            <span class="badge bg-success">Active</span>
+                                            <a th:href="@{/professions/showFormForUpdate(id=${profession.getId()})}" class="btn btn-outline-info">Правка</a>
+                                            <a th:href="@{/professions/delete(id=${profession.getId()})}" class="btn btn-outline-danger">Удалить</a>
                                         </td>
                                     </tr>
                                 </tbody>
