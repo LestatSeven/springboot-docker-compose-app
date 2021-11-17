@@ -30,7 +30,7 @@ public class ProfessionServiceImpl implements ProfessionService {
         if(result.isPresent()) {
             profession = result.get();
         } else {
-            throw new RuntimeException("Did not find profession id - " + id);
+            throw new RuntimeException("Did not find profession with id - " + id);
         }
 
         return profession;

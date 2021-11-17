@@ -26,7 +26,7 @@
             <div class="page-content">
                 <section class="section">
                     <div class="card-header d-flex justify-content-between">
-                        <a th:href="@{/departments/showFormForAdd}" class="btn btn-outline-primary">Добавить</a>
+                        <a th:href="@{/departments/showAddForm}" class="btn btn-outline-primary">Добавить</a>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -35,7 +35,7 @@
                                     <tr>
                                         <th>Подразделение</th>
                                         <th>Родительское подразделение</th>
-                                        <th>Статус</th>
+                                        <th>Действия</th>
                                     </tr>
                                 </thead>
 
@@ -44,7 +44,7 @@
                                         <td th:text="${department.getName()}"></td>
                                         <td th:text="${department.getParent() == null} ? '' : ${department.getParent.getName()}"></td>
                                         <td>
-                                            <a th:href="@{/departments/showFormForUpdate(id=${department.getId()})}" class="btn btn-outline-info">Правка</a>
+                                            <a th:href="@{/departments/showUpdateForm(id=${department.getId()})}" class="btn btn-outline-info">Правка</a>
                                             <a th:href="@{/departments/delete(id=${department.getId()})}" class="btn btn-outline-danger">Удалить</a>
                                         </td>
                                     </tr>

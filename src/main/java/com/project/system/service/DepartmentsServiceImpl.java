@@ -30,7 +30,7 @@ public class DepartmentsServiceImpl implements DepartmentService {
         if (result.isPresent()) {
             department = result.get();
         } else {
-            throw new RuntimeException("Did not find department id - " + id);
+            throw new RuntimeException("Did not find department with id - " + id);
         }
         return department;
     }

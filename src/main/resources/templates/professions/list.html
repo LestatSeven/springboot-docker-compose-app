@@ -11,7 +11,7 @@
 
 <body>
     <div id="app">
-        <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar}"></div>
+        <div id="sidebar" class="active" th:insert="~{_fragments/sidebar :: sidebar}"></div>
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -25,7 +25,7 @@
             <div class="page-content">
                 <section class="section">
                     <div class="card-header d-flex justify-content-between">
-                        <a th:href="@{/professions/showFormForAdd}" class="btn btn-outline-primary">Добавить</a>
+                        <a th:href="@{/professions/showAddForm}" class="btn btn-outline-primary">Добавить</a>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -33,7 +33,7 @@
                                 <thead>
                                     <tr>
                                         <th>Наименование</th>
-                                        <th>Статус</th>
+                                        <th>Действия</th>
                                     </tr>
                                 </thead>
 
@@ -41,7 +41,7 @@
                                     <tr th:each="profession: ${professions}">
                                         <td th:text="${profession.getName()}"></td>
                                         <td>
-                                            <a th:href="@{/professions/showFormForUpdate(id=${profession.getId()})}" class="btn btn-outline-info">Правка</a>
+                                            <a th:href="@{/professions/showUpdateForm(id=${profession.getId()})}" class="btn btn-outline-info">Правка</a>
                                             <a th:href="@{/professions/delete(id=${profession.getId()})}" class="btn btn-outline-danger">Удалить</a>
                                         </td>
                                     </tr>

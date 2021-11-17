@@ -22,7 +22,8 @@ create table if not exists departments (
 create table if not exists staffs (
     id serial primary key,
     department_id integer references departments(id),
-    profession_id integer references profession_titles(id)
+    profession_id integer references profession_titles(id),
+    max_employee_count integer
 );
 
 

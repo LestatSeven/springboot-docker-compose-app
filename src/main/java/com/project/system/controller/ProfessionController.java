@@ -22,20 +22,11 @@ public class ProfessionController {
 
     @GetMapping("/list")
     @ApiOperation("Profession list page")
-    public String listProfession(Model model) {
+    public String list(Model model) {
         var professions = professionService.findAll();
 
         model.addAttribute("professions", professions);
         return "professions/list";
-    }
-
-    @GetMapping("/showFormForAdd")
-    @ApiOperation("Form for adding profession")
-    public String showFormForAdd(Model model) {
-        Profession profession = new Profession();
-        model.addAttribute("profession", profession);
-
-        return "professions/form";
     }
 
     @PostMapping("/save")
@@ -45,21 +36,31 @@ public class ProfessionController {
 
         return "redirect:/professions/list";
     }
+    @GetMapping("/delete")
+    @ApiOperation("Delete profession by id")
+    public String delete(@RequestParam("id") Integer id) {
+        professionService.deleteById(id);
 
-    @GetMapping("/showFormForUpdate")
+        return "redirect:/professions/list";
+    }
+
+    @GetMapping("/showAddForm")
+    @ApiOperation("Form for adding profession")
+    public String showAddForm(Model model) {
+        Profession profession = new Profession();
+        model.addAttribute("profession", profession);
+
+        return "professions/form";
+    }
+
+    @GetMapping("/showUpdateForm")
     @ApiOperation("Form for updating profession")
-    public String showFormForUpdate(@RequestParam("id") Integer id, Model model) {
+    public String showUpdateForm(@RequestParam("id") Integer id, Model model) {
         Profession profession = professionService.findById(id);
         model.addAttribute("profession", profession);
 
         return "professions/form";
     }
 
-    @GetMapping("/delete")
-    @ApiOperation("Delete profession by id")
-    public String deleteProfession(@RequestParam("id") Integer id) {
-        professionService.deleteById(id);
 
-        return "redirect:/professions/list";
-    }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Должности</title>
+    <title>Штатная расстановка сотрудника</title>
 
     <th:block th:include="_fragments/styles :: styles"></th:block>
 </head>
@@ -20,7 +20,7 @@
         </header>
 
         <div class="page-heading">
-            <h3 th:text="${department.getId() == null} ? 'Создание подразделения' : ('Правка подразделения ID=' + ${department.getId()})"></h3>
+            <h3 th:text="${employeeStaff.getId() == null} ? 'Создание штатной расстановки сотрудника' : ('Правка штатной расстановки сотрудника ID=' + ${employeeStaff.getId()})"></h3>
         </div>
         <div class="page-content">
             <section class="section">
@@ -28,18 +28,37 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form form-horizontal" action="#" th:action="@{/departments/save}" th:object="${department}" method="post">
+                            <form class="form form-horizontal" action="#" th:action="@{/employeeStaff/save}" th:object="${employeeStaff}" method="post">
                                 <input type="hidden" th:field="*{id}">
                                 <div class="form-body">
-
                                     <div class="row">
+
                                         <div class="col-md-4">
-                                            <label>Наименование</label>
+                                            <label>Сотрудник</label>
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group has-icon-left">
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Название" th:field="*{name}">
+                                                    <select class="form-select" name="department">
+                                                        <option></option>
+                                                        <option
+                                                                th:each="employee: ${employees}"
+                                                                th:value="${employee.getId()}"
+                                                                th:text="${employee.getFullName()}"
+                                                                th:selected="${employeeStaff.getEmployee() != null && employee != null && employee.getId() == employeeStaff.getEmployee().getId()}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Дата начала действия</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group has-icon-left">
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control" placeholder="Дата начала действия" id="dateBegin" name="dateBegin" th:value="${#dates.format(employeeStaff.getDateBegin(), 'dd.MM.yyyy')}">
                                                     <div class="form-control-icon">
                                                         <i class="bi bi-person"></i>
                                                     </div>
@@ -48,20 +67,15 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label>Родительское подразделение</label>
+                                            <label>Дата окончания действия</label>
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group has-icon-left">
                                                 <div class="position-relative">
-                                                    <select class="form-select" name="parent">
-                                                        <option></option>
-                                                        <option
-                                                                th:each="departmentParent: ${departmentsList}"
-                                                                th:value="${departmentParent.getId()}"
-                                                                th:text="${departmentParent.getName()}"
-                                                                th:selected="${department.getParent() != null && department.getParent().getId() == departmentParent.getId()}"
-                                                        ></option>
-                                                    </select>
+                                                    <input type="text" class="form-control" placeholder="Дата окончания действия" id="dateEnd" name="dateEnd" th:value="${#dates.format(employeeStaff.getDateEnd(), 'dd.MM.yyyy')}">
+                                                    <div class="form-control-icon">
+                                                        <i class="bi bi-person"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

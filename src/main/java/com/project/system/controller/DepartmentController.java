@@ -25,28 +25,16 @@ public class DepartmentController {
 
     @GetMapping("/list")
     @ApiOperation("Departments list page")
-    public String listDepartments(Model model) {
+    public String list(Model model) {
         var departments = departmentService.findAll();
 
         model.addAttribute("departments", departments);
         return "departments/list";
     }
 
-    @GetMapping("/showFormForAdd")
-    @ApiOperation("Form for adding department")
-    public String showFormForAdd(Model model) {
-        Department department = new Department();
-        var departments = departmentService.findAll();
-
-        model.addAttribute("department", department);
-        model.addAttribute("departmentsList", departments);
-
-        return "departments/form";
-    }
-
     @PostMapping("/save")
     @ApiOperation("Saving new or edited profession object")
-    public String saveDepartment(@ModelAttribute("department") Department department) {
+    public String save(@ModelAttribute("department") Department department) {
         Department rootDepartment = departmentService.findRoot();
         if (rootDepartment != null && department.getParent() != null && rootDepartment.getId() == department.getId()) {
             throw new DepartmentRootUnnullParentException("Attempt to change parent id in root department: " + rootDepartment.getId());
@@ -61,9 +49,29 @@ public class DepartmentController {
         return "redirect:/departments/list";
     }
 
-    @GetMapping("/showFormForUpdate")
+    @GetMapping("/delete")
+    @ApiOperation("Delete department by id")
+    public String delete(@RequestParam("id") Integer id) {
+        departmentService.deleteById(id);
+
+        return "redirect:/departments/list";
+    }
+
+    @GetMapping("/showAddForm")
+    @ApiOperation("Form for adding department")
+    public String showAddForm(Model model) {
+        Department department = new Department();
+        var departments = departmentService.findAll();
+
+        model.addAttribute("department", department);
+        model.addAttribute("departmentsList", departments);
+
+        return "departments/form";
+    }
+
+    @GetMapping("/showUpdateForm")
     @ApiOperation("Form for updating department")
-    public String showFormForUpdate(@RequestParam("id") Integer id, Model model) {
+    public String showUpdateForm(@RequestParam("id") Integer id, Model model) {
         Department department = departmentService.findById(id);
         var departments = departmentService.findAll();
         departments.removeIf(dep -> dep.getId() == department.getId());
@@ -74,11 +82,5 @@ public class DepartmentController {
         return "departments/form";
     }
 
-    @GetMapping("/delete")
-    @ApiOperation("Delete department by id")
-    public String deleteProfession(@RequestParam("id") Integer id) {
-        departmentService.deleteById(id);
 
-        return "redirect:/departments/list";
-    }
 }

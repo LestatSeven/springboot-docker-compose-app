@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сотрудники</title>
+    <title>Штатная расстановка</title>
 
     <th:block th:include="_fragments/styles :: styles"></th:block>
 </head>
@@ -20,7 +20,7 @@
         </header>
 
         <div class="page-heading">
-            <h3 th:text="${employee.getId() == null} ? 'Создание сотрудника' : ('Правка сотрудника ID=' + ${employee.getId()})"></h3>
+            <h3 th:text="${staff.getId() == null} ? 'Создание штатной расстановки' : ('Правка штатной расстановки ID=' + ${staff.getId()})"></h3>
         </div>
         <div class="page-content">
             <section class="section">
@@ -28,76 +28,58 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form form-horizontal" action="#" th:action="@{/employees/save}" th:object="${employee}" method="post">
+                            <form class="form form-horizontal" action="#" th:action="@{/staffs/save}" th:object="${staff}" method="post">
                                 <input type="hidden" th:field="*{id}">
                                 <div class="form-body">
                                     <div class="row">
 
                                         <div class="col-md-4">
-                                            <label>Фамилия</label>
+                                            <label>Подразделение</label>
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group has-icon-left">
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Фамилия" th:field="*{lastName}">
+                                                    <select class="form-select" name="department">
+                                                        <option></option>
+                                                        <option
+                                                                th:each="department: ${departments}"
+                                                                th:value="${department.getId()}"
+                                                                th:text="${department.getName()}"
+                                                                th:selected="${staff.getDepartment() != null && department != null && staff.getDepartment().getId() == department.getId()}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Должность</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group has-icon-left">
+                                                <div class="position-relative">
+                                                    <select class="form-select" name="profession">
+                                                        <option></option>
+                                                        <option
+                                                                th:each="profession: ${professions}"
+                                                                th:value="${profession.getId()}"
+                                                                th:text="${profession.getName()}"
+                                                                th:selected="${staff.getProfession() != null && profession != null && staff.getProfession().getId() == profession.getId()}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Максимальное количество сотрудников</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group has-icon-left">
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control" placeholder="Максимальное количество сотрудников" th:field="*{maxEmployeeCount}">
                                                     <div class="form-control-icon">
                                                         <i class="bi bi-person"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label>Имя</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Имя" th:field="*{firstName}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-person"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label>Отчество</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Отчество" th:field="*{middleName}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-person"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label>Email</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="email" class="form-control" placeholder="Email" th:field="*{email}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-envelope"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label>Телефон</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Телефон" th:field="*{phoneNumber}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-phone"></i>
                                                     </div>
                                                 </div>
                                             </div>

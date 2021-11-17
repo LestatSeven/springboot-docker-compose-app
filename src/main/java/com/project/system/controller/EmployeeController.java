@@ -23,44 +23,44 @@ public class EmployeeController {
 
     @GetMapping("/list")
     @ApiOperation("Employees list page")
-    public String listEmployees(Model model) {
+    public String list(Model model) {
         var employees = employeeService.findAll();
         model.addAttribute("employees", employees);
 
         return "employees/list";
     }
 
-    @GetMapping("/showFormForAdd")
+    @PostMapping("/save")
+    @ApiOperation("Saving new or edited employee object")
+    public String save(@ModelAttribute("employee") Employee employee) {
+        employeeService.save(employee);
+
+        return "redirect:/employees/list";
+    }
+
+    @GetMapping("/delete")
+    @ApiOperation("Delete employee by id")
+    public String delete(@RequestParam("id") Integer id) {
+        employeeService.deleteById(id);
+
+        return "redirect:/employees/list";
+    }
+
+    @GetMapping("/showAddForm")
     @ApiOperation("Form for adding employee")
-    public String showFormForAdd(Model model) {
+    public String showAddForm(Model model) {
         Employee employee = new Employee();
         model.addAttribute("employee", employee);
 
         return "employees/form";
     }
 
-    @PostMapping("/save")
-    @ApiOperation("Saving new or edited employee object")
-    public String saveEmployee(@ModelAttribute("employee") Employee employee) {
-        employeeService.save(employee);
-
-        return "redirect:/employees/list";
-    }
-
-    @GetMapping("/showFormForUpdate")
+    @GetMapping("/showUpdateForm")
     @ApiOperation("Form for updating employee")
-    public String showFormForUpdate(@RequestParam("id") Integer id, Model model) {
+    public String showUpdateForm(@RequestParam("id") Integer id, Model model) {
         Employee employee = employeeService.findById(id);
         model.addAttribute("employee", employee);
 
         return "employees/form";
-    }
-
-    @GetMapping("/delete")
-    @ApiOperation("Delete employee by id")
-    public String deleteEmployee(@RequestParam("id") Integer id) {
-        employeeService.deleteById(id);
-
-        return "redirect:/employees/list";
     }
 }
