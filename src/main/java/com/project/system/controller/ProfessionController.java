@@ -1,24 +1,20 @@
 package com.project.system.controller;
 
-import com.project.system.model.Profession;
+import com.project.system.entity.Profession;
 import com.project.system.service.ProfessionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/professions")
 @Api("Profession controller methods")
 public class ProfessionController {
-    private ProfessionService professionService;
-
-    @Autowired
-    public ProfessionController(ProfessionService professionService) {
-        this.professionService = professionService;
-    }
+    private final ProfessionService professionService;
 
     @GetMapping("/list")
     @ApiOperation("Profession list page")

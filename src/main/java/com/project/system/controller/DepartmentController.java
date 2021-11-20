@@ -2,26 +2,21 @@ package com.project.system.controller;
 
 import com.project.system.exceptions.DepartmentFewRootException;
 import com.project.system.exceptions.DepartmentRootUnnullParentException;
-import com.project.system.model.Department;
+import com.project.system.entity.Department;
 import com.project.system.service.DepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/departments")
 @Api("Department controller methods")
 public class DepartmentController {
-    private DepartmentService departmentService;
-
-    @Autowired
-    public DepartmentController(DepartmentService departmentService) {
-        this.departmentService = departmentService;
-    }
+    private final DepartmentService departmentService;
 
     @GetMapping("/list")
     @ApiOperation("Departments list page")
@@ -37,11 +32,11 @@ public class DepartmentController {
     public String save(@ModelAttribute("department") Department department) {
         Department rootDepartment = departmentService.findRoot();
         if (rootDepartment != null && department.getParent() != null && rootDepartment.getId() == department.getId()) {
-            throw new DepartmentRootUnnullParentException("Attempt to change parent id in root department: " + rootDepartment.getId());
+            throw new DepartmentRootUnnullParentException(String.format("Attempt to change parent id in root department: %s", rootDepartment.getId()));
         }
 
         if(rootDepartment != null && department.getParent() == null && rootDepartment.getId() != department.getId()) {
-            throw new DepartmentFewRootException("Attempt to make few root departments: " + department.getId());
+            throw new DepartmentFewRootException(String.format("Attempt to make few root departments: %s", department.getId()));
         }
 
         departmentService.save(department);
@@ -84,3 +79,4 @@ public class DepartmentController {
 
 
 }
+

@@ -1,6 +1,6 @@
 package com.project.system.service;
 
-import com.project.system.model.Profession;
+import com.project.system.entity.Profession;
 
 import java.util.List;
 

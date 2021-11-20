@@ -1,31 +1,34 @@
 package com.project.system.controller;
 
-import com.project.system.model.EmployeeStaff;
-import com.project.system.model.Staff;
+import com.project.system.entity.EmployeeStaff;
+import com.project.system.entity.Staff;
+import com.project.system.exceptions.EmployeeStaffIntersectionedDateBeginException;
+import com.project.system.exceptions.EmployeeStaffIntersectionedDateEndException;
+import com.project.system.exceptions.EmployeeStaffNullDateBeginException;
+import com.project.system.exceptions.EmployeeStaffNullEmployeeException;
 import com.project.system.service.EmployeeService;
 import com.project.system.service.EmployeeStaffService;
 import com.project.system.service.StaffService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.DateFormatter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/employee_staffs")
 @Api("Employee staff controller methods")
 public class EmployeeStaffController {
-    private EmployeeStaffService employeeStaffService;
-    private EmployeeService employeeService;
-    private StaffService staffService;
-
-    @Autowired
-    public EmployeeStaffController(EmployeeStaffService employeeStaffService, EmployeeService employeeService, StaffService staffService) {
-        this.employeeStaffService = employeeStaffService;
-        this.employeeService = employeeService;
-        this.staffService = staffService;
-    }
+    private final EmployeeStaffService employeeStaffService;
+    private final EmployeeService employeeService;
+    private final StaffService staffService;
 
     @GetMapping("/list")
     @ApiOperation("Employee staffs list page")
@@ -42,6 +45,30 @@ public class EmployeeStaffController {
     @PostMapping("/save")
     @ApiOperation("Saving new or edited employee staff object")
     public String save(@ModelAttribute("employeeStaff") EmployeeStaff employeeStaff) {
+        if (employeeStaff.getEmployee() == null) {
+            throw new EmployeeStaffNullEmployeeException(String.format("Attempt to save employee staff with null employee: %s", employeeStaff.getId()));
+        }
+
+        if (employeeStaff.getDateBegin() == null) {
+            throw new EmployeeStaffNullDateBeginException(String.format("Attempt to save employee staff with null date begin: %s", employeeStaff.getId()));
+        }
+
+        var searchedEmployeeStaffs = employeeStaffService.findAllByEmployee(employeeStaff.getEmployee());
+        searchedEmployeeStaffs.removeIf(employeeStaff1 -> employeeStaff1.getId() == employeeStaff.getId());
+
+        for (EmployeeStaff searchedEmployeeStaff: searchedEmployeeStaffs) {
+            LocalDate searchedDateEnd = Optional.ofNullable(searchedEmployeeStaff.getDateEnd()).orElse(LocalDate.MAX);
+            LocalDate savingdDateEnd = Optional.ofNullable(employeeStaff.getDateEnd()).orElse(LocalDate.MAX);
+
+            if (employeeStaff.getDateBegin().isAfter(searchedEmployeeStaff.getDateBegin()) && employeeStaff.getDateBegin().isBefore(searchedDateEnd)) {
+                throw new EmployeeStaffIntersectionedDateBeginException(String.format("Attempt to save employee staff with intersectioned date begin: \"%s\",  found id=[%d]", searchedEmployeeStaff.getDateBegin().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), searchedEmployeeStaff.getId()));
+            }
+
+            if (savingdDateEnd.isAfter(searchedEmployeeStaff.getDateBegin()) && savingdDateEnd.isAfter(searchedDateEnd) && !savingdDateEnd.isEqual(searchedDateEnd)) {
+                throw new EmployeeStaffIntersectionedDateEndException(String.format("Attempt to save employee staff with intersectioned date end: \"%s\" found id=[%d]", searchedEmployeeStaff.getDateEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), searchedEmployeeStaff.getId()));
+            }
+        }
+
         employeeStaffService.save(employeeStaff);
         return String.format("redirect:/employee_staffs/list?staffId=%s", employeeStaff.getStaff().getId());
     }

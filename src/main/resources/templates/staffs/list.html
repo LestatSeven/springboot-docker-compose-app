@@ -41,17 +41,17 @@
                                 </thead>
 
                                 <tbody>
-                                    <tr th:each="staff: ${staffs}">
-                                        <td th:text="${staff.getDepartment().getName()}"></td>
-                                        <td th:text="${staff.getProfession().getName()}"></td>
+                                    <tr th:each="staffDto: ${staffDtos}">
+                                        <td th:text="${staffDto.getStaff().getDepartment().getName()}"></td>
+                                        <td th:text="${staffDto.getStaff().getProfession().getName()}"></td>
                                         <td>
-                                            <a th:href="@{/employee_staffs/list(staffId=${staff.getId()})}" th:text="${staff.getEmployees().size()}" class="text-decoration-underline"></a>
+                                            <a th:href="@{/employee_staffs/list(staffId=${staffDto.staff.getId()})}" th:text="${staffDto.getCountEmployees()}" class="text-decoration-underline"></a>
                                         </td>
-                                        <td th:text="${staff.getMaxEmployeeCount()}"></td>
+                                        <td th:text="${staffDto.getStaff().getMaxEmployeeCount()}"></td>
                                         <td></td>
                                         <td>
-                                            <a th:href="@{/staffs/showUpdateForm(id=${staff.getId()})}" class="btn btn-outline-info">Правка</a>
-                                            <a th:href="@{/staffs/delete(id=${staff.getId()})}" class="btn btn-outline-danger">Удалить</a>
+                                            <a th:href="@{/staffs/showUpdateForm(id=${staffDto.getStaff().getId()})}" class="btn btn-outline-info">Правка</a>
+                                            <a th:href="@{/staffs/delete(id=${staffDto.getStaff().getId()})}" class="btn btn-outline-danger">Удалить</a>
                                         </td>
                                     </tr>
                                 </tbody>

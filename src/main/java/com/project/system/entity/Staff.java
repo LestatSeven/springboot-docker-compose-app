@@ -1,11 +1,10 @@
-package com.project.system.model;
+package com.project.system.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -31,24 +30,6 @@ public class Staff {
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "profession_id", referencedColumnName = "id")
     private Profession profession;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
-    @JoinTable(
-            name = "employee_staff",
-            joinColumns = @JoinColumn(
-                    name = "staff_id",
-                    referencedColumnName = "id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "employee_id",
-                    referencedColumnName = "id"
-            )
-    )
-    @ToString.Exclude
-    private List<Employee> employees;
 
     @Override
     public boolean equals(Object o) {

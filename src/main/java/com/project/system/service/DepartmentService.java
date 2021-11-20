@@ -1,6 +1,6 @@
 package com.project.system.service;
 
-import com.project.system.model.Department;
+import com.project.system.entity.Department;
 
 import java.util.List;
 

@@ -1,21 +1,18 @@
 package com.project.system.service;
 
-import com.project.system.model.Staff;
+import com.project.system.entity.Department;
+import com.project.system.entity.Profession;
+import com.project.system.entity.Staff;
 import com.project.system.repository.StaffRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StaffServiceImpl implements StaffService{
-
-    @Autowired
-    private StaffRepository staffRepository;
-
-    public StaffServiceImpl(StaffRepository staffRepository) {
-        this.staffRepository = staffRepository;
-    }
+    private final StaffRepository staffRepository;
 
     @Override
     public List<Staff> findAll() {
@@ -24,16 +21,12 @@ public class StaffServiceImpl implements StaffService{
 
     @Override
     public Staff findById(Integer id) {
-        var result = staffRepository.findById(id);
-        Staff staff = null;
+        return staffRepository.findById(id).orElseThrow(() -> new IllegalStateException("Did not find staff with id - " + id));
+    }
 
-        if (result.isPresent()) {
-            staff = result.get();
-        } else {
-            throw new RuntimeException("Did not find staff with id - " + id);
-        }
-
-        return staff;
+    @Override
+    public Staff findByDepartmentAndProfession(Department department, Profession profession) {
+        return staffRepository.findByDepartmentAndProfession(department, profession);
     }
 
     @Override

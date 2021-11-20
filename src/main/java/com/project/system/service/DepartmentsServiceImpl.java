@@ -1,21 +1,16 @@
 package com.project.system.service;
 
-import com.project.system.model.Department;
+import com.project.system.entity.Department;
 import com.project.system.repository.DepartmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DepartmentsServiceImpl implements DepartmentService {
-    private DepartmentRepository departmentRepository;
-
-    @Autowired
-    public DepartmentsServiceImpl(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-    }
+    private final DepartmentRepository departmentRepository;
 
     @Override
     public List<Department> findAll() {
@@ -24,15 +19,7 @@ public class DepartmentsServiceImpl implements DepartmentService {
 
     @Override
     public Department findById(Integer id) {
-        Optional<Department> result = departmentRepository.findById(id);
-        Department department = null;
-
-        if (result.isPresent()) {
-            department = result.get();
-        } else {
-            throw new RuntimeException("Did not find department with id - " + id);
-        }
-        return department;
+        return departmentRepository.findById(id).orElseThrow(() -> new IllegalStateException("Did not find department with id - " + id));
     }
 
     @Override

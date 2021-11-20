@@ -1,20 +1,16 @@
 package com.project.system.service;
 
-import com.project.system.model.Employee;
+import com.project.system.entity.Employee;
 import com.project.system.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+    private final EmployeeRepository employeeRepository;
 
     @Override
     public List<Employee> findAll() {
@@ -23,15 +19,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findById(Integer id) {
-        var result = employeeRepository.findById(id);
-        Employee employee = null;
-
-        if (result.isPresent()) {
-            employee = result.get();
-        } else {
-            throw new RuntimeException("Did not find employee with id - " + id);
-        }
-        return employee;
+        return employeeRepository.findById(id).orElseThrow(() -> new IllegalStateException("Did not find employee with id - " + id));
     }
 
     @Override
