@@ -10,7 +10,7 @@ insert into employees(id, first_name, last_name, middle_name, email, phone_numbe
 insert into employees(id, first_name, last_name, middle_name, email, phone_number) VALUES (10, 'Алексей', 'Алексеев', 'Алексеевич', 'alekseev@gmail.com', '+71236576512');
 insert into employees(id, first_name, last_name, middle_name, email, phone_number) VALUES (11, 'Лев', 'Львов', 'Львович', 'lvov@gmail.com', '+73516323123');
 insert into employees(id, first_name, last_name, middle_name, email, phone_number) VALUES (12, 'Максим', 'Максимов', 'Максимович', 'maximov@gmail.com', '+71234567890');
-insert into employees(id, first_name, last_name, middle_name, email, phone_number) VALUES (13, 'Дмитрий', 'Дмитров', 'Дмитриевич', 'dmitrov@gmail.com', '+785347560192');
+insert into employees(id, first_name, last_name, middle_name, email, phone_number) VALUES (13, 'Дмитрий', 'Дмитров', 'Дмитриевич', 'dmitrov@gmail.com', '+78534750192');
 insert into employees(id, first_name, last_name, middle_name, email, phone_number) VALUES (14, 'Евгений', 'Евгениев', 'Евгениевич', 'evgeniev@gmail.com', '+78459347683');
 
 alter sequence employees_id_seq restart with 15;
@@ -60,17 +60,3 @@ insert into employee_staff(id, employee_id, staff_id, date_begin, date_end, empl
 insert into employee_staff(id, employee_id, staff_id, date_begin, date_end, employee_type) VALUES (14, 14, 7, to_date('01.02.2021', 'dd.mm.yyyy'), null, 1);
 
 alter sequence employee_staff_id_seq restart with 15;
-
-insert into pdps(id, date_create, employee_staff_id) VALUES (1, to_date('01.02.2021', 'dd.mm.yyyy'), 1);
-insert into pdps(id, date_create, employee_staff_id) VALUES (2, to_date('01.03.2021', 'dd.mm.yyyy'), 1);
-insert into pdps(id, date_create, employee_staff_id) VALUES (3, to_date('01.03.2021', 'dd.mm.yyyy'), 2);
-insert into pdps(id, date_create, employee_staff_id) VALUES (4, to_date('01.04.2021', 'dd.mm.yyyy'), 2);
-
-alter sequence pdps_id_seq restart with 5;
-
-insert into pdp_list(id, pdp_id, text, achieved) VALUES (1, 1, 'Какой-то текст', true);
-insert into pdp_list(id, pdp_id, text, achieved) VALUES (2, 2, 'Какой-то текст 2', true);
-insert into pdp_list(id, pdp_id, text, achieved) VALUES (3, 3, 'Какой-то текст 3', true);
-insert into pdp_list(id, pdp_id, text, achieved) VALUES (4, 4, 'Какой-то текст 4', true);
-
-alter sequence pdp_list_id_seq restart with 5;

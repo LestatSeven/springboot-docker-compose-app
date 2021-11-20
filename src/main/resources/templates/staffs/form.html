@@ -11,7 +11,7 @@
 
 <body>
 <div id="app">
-    <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar}"></div>
+    <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar(page='staffs')}"></div>
     <div id="main">
         <header class="mb-3">
             <a href="#" class="burger-btn d-block d-xl-none">
@@ -30,6 +30,7 @@
                         <div class="card-body">
                             <form class="form form-horizontal" action="#" th:action="@{/staffs/save}" th:object="${staff}" method="post">
                                 <input type="hidden" th:field="*{id}">
+                                <input type="hidden" th:field="*{employees}">
                                 <div class="form-body">
                                     <div class="row">
 
@@ -75,12 +76,9 @@
                                             <label>Максимальное количество сотрудников</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
+                                            <div class="form-group">
                                                 <div class="position-relative">
                                                     <input type="text" class="form-control" placeholder="Максимальное количество сотрудников" th:field="*{maxEmployeeCount}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-person"></i>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

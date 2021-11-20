@@ -1,4 +1,4 @@
-package com.project.system.controller;
+package com.project.system.exceptions;
 
 public class DepartmentRootUnnullParentException extends RuntimeException {
     public DepartmentRootUnnullParentException(String message) {

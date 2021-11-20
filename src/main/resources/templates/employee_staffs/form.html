@@ -11,7 +11,7 @@
 
 <body>
 <div id="app">
-    <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar}"></div>
+    <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar(page='staffs')}"></div>
     <div id="main">
         <header class="mb-3">
             <a href="#" class="burger-btn d-block d-xl-none">
@@ -28,8 +28,9 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form form-horizontal" action="#" th:action="@{/employeeStaff/save}" th:object="${employeeStaff}" method="post">
+                            <form class="form form-horizontal" action="#" th:action="@{/employee_staffs/save}" th:object="${employeeStaff}" method="post">
                                 <input type="hidden" th:field="*{id}">
+                                <input type="hidden" th:field="*{staff}">
                                 <div class="form-body">
                                     <div class="row">
 
@@ -39,7 +40,7 @@
                                         <div class="col-md-8">
                                             <div class="form-group has-icon-left">
                                                 <div class="position-relative">
-                                                    <select class="form-select" name="department">
+                                                    <select class="form-select" name="employee">
                                                         <option></option>
                                                         <option
                                                                 th:each="employee: ${employees}"
@@ -56,12 +57,17 @@
                                             <label>Дата начала действия</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
+                                            <div class="form-group">
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Дата начала действия" id="dateBegin" name="dateBegin" th:value="${#dates.format(employeeStaff.getDateBegin(), 'dd.MM.yyyy')}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-person"></i>
-                                                    </div>
+                                                    <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            placeholder="Дата начала действия"
+                                                            id="dateBegin"
+                                                            name="dateBegin"
+                                                            th:value="${employeeStaff.getDateBegin()}"
+                                                            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
+                                                    >
                                                 </div>
                                             </div>
                                         </div>
@@ -70,12 +76,17 @@
                                             <label>Дата окончания действия</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <div class="form-group has-icon-left">
+                                            <div class="form-group">
                                                 <div class="position-relative">
-                                                    <input type="text" class="form-control" placeholder="Дата окончания действия" id="dateEnd" name="dateEnd" th:value="${#dates.format(employeeStaff.getDateEnd(), 'dd.MM.yyyy')}">
-                                                    <div class="form-control-icon">
-                                                        <i class="bi bi-person"></i>
-                                                    </div>
+                                                    <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            placeholder="Дата окончания действия"
+                                                            id="dateEnd"
+                                                            name="dateEnd"
+                                                            th:value="${employeeStaff.getDateEnd()}"
+                                                            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
+                                                    >
                                                 </div>
                                             </div>
                                         </div>

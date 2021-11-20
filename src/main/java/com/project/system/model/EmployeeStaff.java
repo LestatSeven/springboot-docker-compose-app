@@ -1,12 +1,13 @@
 package com.project.system.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -30,8 +31,23 @@ public class EmployeeStaff {
     private Staff staff;
 
     @Column(name = "date_begin")
-    private Date dateBegin;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateBegin;
 
     @Column(name = "date_end")
-    private Date dateEnd;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateEnd;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        EmployeeStaff that = (EmployeeStaff) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

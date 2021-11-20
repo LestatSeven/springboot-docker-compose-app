@@ -43,8 +43,7 @@ public class EmployeeStaffController {
     @ApiOperation("Saving new or edited employee staff object")
     public String save(@ModelAttribute("employeeStaff") EmployeeStaff employeeStaff) {
         employeeStaffService.save(employeeStaff);
-
-        return "redirect:/employee_staffs/list";
+        return String.format("redirect:/employee_staffs/list?staffId=%s", employeeStaff.getStaff().getId());
     }
 
     @GetMapping("/delete")
