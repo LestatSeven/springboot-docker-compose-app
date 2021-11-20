@@ -1,0 +1,24 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/system_test?useSSL=false&serverTimezone=UTC
+    username: postgres_user
+    password: postgres_pass
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+  data:
+    rest:
+      base-path: /api
+  rabbitmq:
+    host: localhost
+    username: rabbit
+    password: rabbit
+    port: 5672
+logging:
+  level:
+    org:
+      springframework: debug

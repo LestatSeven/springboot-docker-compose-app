@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Штатная расстановка</title>
+
+    <th:block th:include="_fragments/styles :: styles"></th:block>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active" th:insert="~{_fragments/sidebar :: sidebar(page='staffs')}"></div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            
+            <div class="page-heading">
+                <h3>Штатная расстановка</h3>
+            </div>
+            <div class="page-content">
+                <section class="section">
+                    <div class="card-header d-flex justify-content-between">
+                        <a th:href="@{/staffs/showAddForm}" class="btn btn-outline-primary">Добавить</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Подразделение</th>
+                                        <th>Должность</th>
+                                        <th>Текущее количество единиц</th>
+                                        <th>Максимальное количество единиц</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="staffDto: ${staffDtos}">
+                                        <td th:text="${staffDto.getStaff().getDepartment().getName()}"></td>
+                                        <td th:text="${staffDto.getStaff().getProfession().getName()}"></td>
+                                        <td>
+                                            <a th:href="@{/employee_staffs/list(staffId=${staffDto.staff.getId()})}" th:text="${staffDto.getCountEmployees()}" class="text-decoration-underline"></a>
+                                        </td>
+                                        <td th:text="${staffDto.getStaff().getMaxEmployeeCount()}"></td>
+                                        <td></td>
+                                        <td>
+                                            <a th:href="@{/staffs/showUpdateForm(id=${staffDto.getStaff().getId()})}" class="btn btn-outline-info">Правка</a>
+                                            <a th:href="@{/staffs/delete(id=${staffDto.getStaff().getId()})}" class="btn btn-outline-danger">Удалить</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            
+                </section>
+            </div>
+        
+        </div>
+    </div>
+
+    <th:block th:include="_fragments/scripts :: scripts"></th:block>
+    <script>
+        let datatable = $("#table1").DataTable()
+    </script>
+</body>
+
+</html>

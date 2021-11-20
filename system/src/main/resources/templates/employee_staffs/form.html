@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Штатная расстановка сотрудника</title>
+
+    <th:block th:include="_fragments/styles :: styles"></th:block>
+</head>
+
+<body>
+<div id="app">
+    <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar(page='staffs')}"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <h3 th:text="${employeeStaff.getId() == null} ? 'Создание штатной расстановки сотрудника' : ('Правка штатной расстановки сотрудника ID=' + ${employeeStaff.getId()})"></h3>
+        </div>
+        <div class="page-content">
+            <section class="section">
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form class="form form-horizontal" action="#" th:action="@{/employee_staffs/save}" th:object="${employeeStaff}" method="post">
+                                <input type="hidden" th:field="*{id}">
+                                <input type="hidden" th:field="*{staff}">
+                                <div class="form-body">
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <label>Сотрудник</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group has-icon-left">
+                                                <div class="position-relative">
+                                                    <select class="form-select" name="employee">
+                                                        <option></option>
+                                                        <option
+                                                                th:each="employee: ${employees}"
+                                                                th:value="${employee.getId()}"
+                                                                th:text="${employee.getFullName()}"
+                                                                th:selected="${employeeStaff.getEmployee() != null && employee != null && employee.getId() == employeeStaff.getEmployee().getId()}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Дата начала действия</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <div class="position-relative">
+                                                    <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            placeholder="Дата начала действия"
+                                                            id="dateBegin"
+                                                            name="dateBegin"
+                                                            th:value="${employeeStaff.getDateBegin()}"
+                                                            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Дата окончания действия</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <div class="position-relative">
+                                                    <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            placeholder="Дата окончания действия"
+                                                            id="dateEnd"
+                                                            name="dateEnd"
+                                                            th:value="${employeeStaff.getDateEnd()}"
+                                                            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary me-1 mb-1">Сохранить</button>
+                                            <button type="reset" class="btn btn-light-secondary me-1 mb-1" onclick="history.back();">Назад</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+    </div>
+</div>
+
+<th:block th:include="_fragments/scripts :: scripts"></th:block>
+</body>
+
+</html>

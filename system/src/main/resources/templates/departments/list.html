@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подразделения</title>
+
+    <th:block th:include="_fragments/styles :: styles"></th:block>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active" th:insert="~{/_fragments/sidebar :: sidebar(page='departments')}"></div>
+
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            
+            <div class="page-heading">
+                <h3>Подразделения</h3>
+            </div>
+            <div class="page-content">
+                <section class="section">
+                    <div class="card-header d-flex justify-content-between">
+                        <a th:href="@{/departments/showAddForm}" class="btn btn-outline-primary">Добавить</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Подразделение</th>
+                                        <th>Родительское подразделение</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr th:each="department: ${departments}">
+                                        <td th:text="${department.getName()}"></td>
+                                        <td th:text="${department.getParent() == null} ? '' : ${department.getParent.getName()}"></td>
+                                        <td>
+                                            <a th:href="@{/departments/showUpdateForm(id=${department.getId()})}" class="btn btn-outline-info">Правка</a>
+                                            <a th:href="@{/departments/delete(id=${department.getId()})}" class="btn btn-outline-danger">Удалить</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            
+                </section>
+            </div>
+        
+        </div>
+    </div>
+
+    <th:block th:include="_fragments/scripts :: scripts"></th:block>
+    <script>
+        let datatable = $("#table1").DataTable()
+    </script>
+</body>
+
+</html>
