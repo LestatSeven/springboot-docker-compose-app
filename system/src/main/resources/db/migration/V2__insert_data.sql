@@ -61,7 +61,7 @@ insert into employee_staff(id, employee_id, staff_id, date_begin, date_end, empl
 
 alter sequence employee_staff_id_seq restart with 15;
 
-insert into reporting_config(id, report_name, report_url) VALUES (1, 'Список сотрудников', '/reports/employeesList');
-insert into reporting_config(id, report_name, report_url) VALUES (2, 'Штатное расписание', '/reports/staffEmployeesList');
+insert into reporting_config(id, report_name, report_short) VALUES (1, 'Список сотрудников', 'employees_list');
+insert into reporting_config(id, report_name, report_short) VALUES (2, 'Штатное расписание', 'staff_employees_list');
 
 alter sequence reporting_config_id_seq restart with 3;

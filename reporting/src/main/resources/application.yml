@@ -22,3 +22,5 @@ logging:
   level:
     org:
       springframework: debug
+document:
+  directory: upload

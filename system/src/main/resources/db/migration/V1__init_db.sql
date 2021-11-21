@@ -44,7 +44,7 @@ create table if not exists employee_staff (
 create table if not exists reporting_config (
     id serial primary key,
     report_name varchar(1024),
-    report_url varchar(1024)
+    report_short varchar(1024)
 );
 
 create table if not exists reports_status (

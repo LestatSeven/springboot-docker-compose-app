@@ -23,6 +23,6 @@ public class ReportingConfig {
     @Column(name = "report_name")
     private String reportName;
 
-    @Column(name = "report_url")
-    private String reportUrl;
+    @Column(name = "report_short")
+    private String reportShort;
 }
