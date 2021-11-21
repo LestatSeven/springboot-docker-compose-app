@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class Response {
     JsonReturnStatuses status;
     Integer requestedId;
+    Integer reportStatusId;
     String text;
 }

@@ -52,6 +52,7 @@ create table if not exists reports_status (
     reporting_config_id integer references reporting_config(id),
     generated_name varchar(1024),
     date_request timestamp,
+    date_received timestamp,
     date_start timestamp,
     date_end timestamp
 );

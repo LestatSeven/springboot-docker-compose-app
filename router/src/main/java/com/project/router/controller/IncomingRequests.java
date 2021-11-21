@@ -23,8 +23,6 @@ public class IncomingRequests {
     @GetMapping("/send/{id}")
     public Response getRequest(@PathVariable Integer id) {
         try {
-            this.template.convertAndSend("rabbit-queue", id);
-
             ReportingConfig reportingConfig = reportingConfigService.findById(id);
             ReportStatus reportStatus = ReportStatus.builder()
                     .config(reportingConfig)
@@ -32,9 +30,12 @@ public class IncomingRequests {
                     .build();
             reportStatusService.save(reportStatus);
 
+            template.convertAndSend("rabbit-queue", reportStatus.getId());
+
             Response response = Response.builder()
                             .status(JsonReturnStatuses.SUCCESSED)
                             .requestedId(id)
+                            .reportStatusId(reportStatus.getId())
                             .build();
             System.out.println(response);
             return response;

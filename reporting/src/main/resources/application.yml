@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8082
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/system_test?useSSL=false&serverTimezone=UTC
@@ -13,11 +13,6 @@ spring:
   data:
     rest:
       base-path: /api
-  flyway:
-    url: ${spring.datasource.url}
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    baseline-on-migrate: true
   rabbitmq:
     host: localhost
     username: rabbit
@@ -27,6 +22,3 @@ logging:
   level:
     org:
       springframework: debug
-service:
-  rabbit:
-    url: http://localhost:8081

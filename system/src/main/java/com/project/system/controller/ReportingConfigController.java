@@ -27,7 +27,7 @@ import java.util.Arrays;
 public class ReportingConfigController {
     private final ReportingConfigService reportingConfigService;
 
-    @Value("${rabbit-service.url}")
+    @Value("${service.rabbit.url}")
     private String rabbitUrl;
 
     @GetMapping("/list")

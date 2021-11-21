@@ -29,6 +29,7 @@ services:
       - FLYWAY_USER=postgres_user
       - FLYWAY_PASSWORD=postgres_pass
       - FLYWAY_BASELINE_ON_MIGRATE=true
+      - SERVICE_RABBIT_URL=http://rabbit:5672
   db:
     image: postgres:13-alpine
     container_name: db
@@ -52,9 +53,12 @@ services:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - rabbit_data:/var/lib/rabbitmq/mnesia
+      - rabbit_data:/var/lib/rabbitmq/
+      - rabbit_log:/var/log/rabbitmq
 volumes:
   database_data:
     driver: local
   rabbit_data:
+    driver: local
+  rabbit_log:
     driver: local

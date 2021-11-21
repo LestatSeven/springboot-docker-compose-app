@@ -1,4 +1,4 @@
-package com.project.router.entity;
+package com.project.reporting.entity;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
