@@ -49,8 +49,9 @@ create table if not exists reporting_config (
 
 create table if not exists reports_status (
     id serial primary key,
+    reporting_config_id integer references reporting_config(id),
     generated_name varchar(1024),
-    date_request date,
-    date_start date,
-    date_end date
+    date_request timestamp,
+    date_start timestamp,
+    date_end timestamp
 );

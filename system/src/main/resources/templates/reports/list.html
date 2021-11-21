@@ -38,7 +38,7 @@
                                     <tr th:each="reportConfig: ${reportingConfigs}">
                                         <td th:text="${reportConfig.getReportName()}"></td>
                                         <td>
-                                            <a th:href="@{/reporting_config/makeReport(id=${reportConfig.getId()})}" class="btn btn-outline-info">Сформировать отчёт</a>
+                                            <a th:href="@{/reporting/makeReport(id=${reportConfig.getId()})}" class="btn btn-outline-info">Сформировать отчёт</a>
                                         </td>
                                     </tr>
                                 </tbody>

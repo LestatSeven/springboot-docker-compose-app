@@ -27,3 +27,5 @@ logging:
   level:
     org:
       springframework: debug
+rabbit-service:
+  url: http://localhost:8081
