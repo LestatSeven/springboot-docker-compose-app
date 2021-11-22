@@ -2,13 +2,15 @@ package com.project.reporting.reporting.producer;
 
 import com.project.reporting.reporting.collector.DataCollector;
 import com.project.reporting.reporting.model.Employee;
+import com.project.reporting.reporting.saver.HtmlFileSaver;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class EmployeesHtmlReportProducerImpl<T> extends HtmlDataProducerImpl<Employee> {
-
-    public EmployeesHtmlReportProducerImpl(DataCollector<Employee> dataCollector) {
-        super(dataCollector);
+    public EmployeesHtmlReportProducerImpl(DataCollector<Employee> dataCollector, HtmlFileSaver saver) {
+        super(dataCollector, saver);
     }
 
     @Override

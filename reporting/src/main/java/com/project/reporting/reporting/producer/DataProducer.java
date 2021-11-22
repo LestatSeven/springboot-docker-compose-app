@@ -11,7 +11,7 @@ public interface DataProducer<T> {
     void collect();
     void generateHeader(String name);
     void generateFooter();
-    void save(Save save) throws IOException;
+    void save() throws Exception;
     void afterEnd(Commit commit);
     Saver getSaver();
 }

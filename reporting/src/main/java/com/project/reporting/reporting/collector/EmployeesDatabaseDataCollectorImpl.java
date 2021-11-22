@@ -3,12 +3,14 @@ package com.project.reporting.reporting.collector;
 import com.project.reporting.reporting.model.Employee;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.util.List;
 
+@Component
 public class EmployeesDatabaseDataCollectorImpl<T> implements DatabaseDataCollector<Employee> {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private String query;
     private RowMapper<Employee> employeeRowMapper;
     private List<Employee> data;
@@ -54,7 +56,6 @@ public class EmployeesDatabaseDataCollectorImpl<T> implements DatabaseDataCollec
     @Override
     public void collect(String query, RowMapper<Employee> mapper) {
         data = jdbcTemplate.query(query, employeeRowMapper);
-        //data.forEach(employee -> System.out.println(employee));
     }
 
     @Override

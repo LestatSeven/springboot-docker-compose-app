@@ -2,23 +2,26 @@ package com.project.reporting.reporting.producer;
 
 import com.project.reporting.reporting.collector.DataCollector;
 import com.project.reporting.reporting.saver.HtmlFileSaver;
+import com.project.reporting.reporting.saver.Saver;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 
 public class HtmlDataProducerImpl<T> implements DataProducer<T> {
     private StringBuilder result = new StringBuilder();
     private String reportName;
     private final DataCollector<T> dataCollector;
-    private HtmlFileSaver fileSaver;
+    private HtmlFileSaver saver;
 
-    public HtmlDataProducerImpl(DataCollector<T> dataCollector) {
+    public HtmlDataProducerImpl(DataCollector<T> dataCollector, HtmlFileSaver saver) {
         this.dataCollector = dataCollector;
+        this.saver = saver;
     }
 
     @Override
-    public HtmlFileSaver getSaver() {
-        return fileSaver;
+    public Saver getSaver() {
+        return saver;
     }
 
     public StringBuilder getResult() {
@@ -74,8 +77,10 @@ public class HtmlDataProducerImpl<T> implements DataProducer<T> {
     }
 
     @Override
-    public void save(Save save) throws IOException {
-        save.doAction(this.reportName, this.getResult(), ".html");
+    public void save() throws Exception {
+        this.saver.setName(this.reportName);
+        this.saver.setResult(this.result);
+        this.saver.save();
     }
 
     @Override

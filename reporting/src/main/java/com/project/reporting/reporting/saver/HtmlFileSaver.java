@@ -1,28 +1,41 @@
 package com.project.reporting.reporting.saver;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
-@Builder
+@Controller
 public class HtmlFileSaver implements Saver {
-    private String location;
+    @Value("${web.upload.path}")
+    private String documentDirectory;
+
     private String name;
     private StringBuilder result;
 
-    public void save() throws IOException {
-        //var location = Paths.get(documentStorageProperty.getDirectory()).toAbsolutePath().normalize();
-        Files.createDirectories(Path.of(location));
-
-        File file = new File(location + "/" + name  + ".html");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.write(result.toString());
-        writer.close();
+    public String getName() {
+        return name;
     }
-}
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public StringBuilder getResult() {
+        return result;
+    }
+
+    public void setResult(StringBuilder result) {
+        this.result = result;
+    }
+
+    public void save() throws IOException {
+        String reportsLocation = new File("reporting\\src\\main\\resources\\static\\reports").getAbsolutePath();
+        System.out.println(reportsLocation);
+        FileOutputStream fileOutputStream = new FileOutputStream(reportsLocation + "\\" + name + ".html");
+        fileOutputStream.write(result.toString().getBytes());
+        fileOutputStream.close();
+    }}

@@ -1,17 +1,16 @@
 package com.project.reporting.service;
 
-import com.project.reporting.config.DocumentStorageProperty;
 import com.project.reporting.config.RabbitConfig;
 import com.project.reporting.entity.ReportStatus;
-import com.project.reporting.reporting.producer.DataProducer;
-import com.project.reporting.reporting.producer.DataProducerFactory;
+import com.project.reporting.reporting.report.Report;
+import com.project.reporting.reporting.report.ReportFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,8 +18,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class RabbitReceiverServiceImpl implements RabbitReceiverService {
     private final ReportStatusService reportStatusService;
-    private final JdbcTemplate jdbcTemplate;
-    private final DocumentStorageProperty documentStorageProperty;
+    private final ReportFactory reportFactory;
 
     @Override
     @RabbitListener(queues = RabbitConfig.QUEUE_NAME)
@@ -30,27 +28,23 @@ public class RabbitReceiverServiceImpl implements RabbitReceiverService {
         reportStatus.setDateReceived(LocalDateTime.now());
         reportStatusService.save(reportStatus);
 
-        DataProducer reportProducer = new DataProducerFactory(jdbcTemplate).getReportProducer(reportStatus);
-        reportProducer.beforeStart(() -> {
+        Report report = reportFactory.getFactory(reportStatus);
+        report.getProducer().beforeStart(() -> {
             reportStatus.setDateStart(LocalDateTime.now());
             reportStatusService.save(reportStatus);
         });
-        reportProducer.collect();
-        reportProducer.generateHeader(reportStatus.getConfig().getReportName() + " - " + reportStatus.getDateRequest().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss")));
-        reportProducer.produce();
-        reportProducer.generateFooter();
-        reportProducer.save((name, result, extension) -> {
-            var location = Paths.get(documentStorageProperty.getDirectory()).toAbsolutePath().normalize();
-            var fileSaver = reportProducer.getSaver();
-            /*
-                    .location(location)
-                    .name(name)
-                    .result(result)
-                    .build();
-            */
-            reportStatus.setGeneratedName(name + "");
-        });
-        reportProducer.afterEnd(() -> {
+        report.getCollector().collect();
+        report.getProducer().generateHeader(reportStatus.getConfig().getReportName() + " - " + reportStatus.getDateRequest().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss")));
+        report.getProducer().produce();
+        report.getProducer().generateFooter();
+        try {
+            report.getProducer().save();
+        } catch (Exception e) {
+            reportStatus.setError(e.getMessage());
+            e.printStackTrace();
+            reportStatusService.save(reportStatus);
+        }
+        report.getProducer().afterEnd(() -> {
             reportStatus.setDateEnd(LocalDateTime.now());
             reportStatusService.save(reportStatus);
         });

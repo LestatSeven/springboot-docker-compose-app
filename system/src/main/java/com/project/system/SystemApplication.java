@@ -10,6 +10,6 @@ public class SystemApplication {
 		long start = System.nanoTime();
 		System.out.println("http://localhost:8080");
 		SpringApplication.run(SystemApplication.class, args);
-		System.out.println(String.format("Startup: %s ms", (System.nanoTime() - start) / 1_000_000));
+		System.out.printf("Startup: %s ms%n", (System.nanoTime() - start) / 1_000_000);
 	}
 }

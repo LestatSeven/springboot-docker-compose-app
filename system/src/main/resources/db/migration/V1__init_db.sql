@@ -54,5 +54,6 @@ create table if not exists reports_status (
     date_request timestamp,
     date_received timestamp,
     date_start timestamp,
-    date_end timestamp
+    date_end timestamp,
+    error varchar
 );

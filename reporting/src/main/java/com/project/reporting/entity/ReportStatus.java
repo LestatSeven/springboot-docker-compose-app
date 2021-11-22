@@ -40,4 +40,7 @@ public class ReportStatus {
 
     @Column(name = "date_end")
     private LocalDateTime dateEnd;
+
+    @Column(name = "error")
+    private String error;
 }
