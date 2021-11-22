@@ -35,10 +35,15 @@
                                 </thead>
 
                                 <tbody>
-                                    <tr th:each="reportConfig: ${reportingConfigs}">
-                                        <td th:text="${reportConfig.getReportName()}"></td>
+                                    <tr th:each="reportConfigDto: ${reportingConfigsDto}">
                                         <td>
-                                            <a th:href="@{/reporting/makeReport(id=${reportConfig.getId()})}" class="btn btn-outline-info">Сформировать отчёт</a>
+                                            <a th:text="${reportConfigDto.getReportingConfig().getReportName()}" onclick="toggle(this);" style="text-decoration: underline !important; cursor:pointer;"></a>
+                                            <div th:each="reportStatus: ${reportConfigDto.getReportStatusList()}">
+                                                <a th:text="${reportStatus.getGeneratedName()}" th:href="@{{url}/reports/{generated}(url=${reportService}, generated=${reportStatus.getGeneratedName() + '.html'})}"></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/reporting/makeReport(id=${reportConfigDto.getReportingConfig().getId()})}" class="btn btn-outline-info">Сформировать отчёт</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -54,7 +59,9 @@
 
     <th:block th:include="_fragments/scripts :: scripts"></th:block>
     <script>
-        //let datatable = $("#table1").DataTable()
+        function toggle(el) {
+            $(el).parent().find("div").toggle();
+        }
     </script>
 </body>
 

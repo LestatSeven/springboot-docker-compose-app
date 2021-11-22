@@ -34,10 +34,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-bootJar {
-	destinationDirectory = new File(projectDir, "/docker")
-}
+bootJar {}
 
 test {
 	useJUnitPlatform()
 }
+
+sourceSets.main.java.srcDirs = ['src/main/java']

@@ -5,9 +5,9 @@ import com.project.reporting.reporting.model.Employee;
 
 import java.util.List;
 
-public class EmployeesHtmlReportProducerImpl extends HtmlDataProducerImpl {
+public class EmployeesHtmlReportProducerImpl<T> extends HtmlDataProducerImpl<Employee> {
 
-    public EmployeesHtmlReportProducerImpl(DataCollector dataCollector) {
+    public EmployeesHtmlReportProducerImpl(DataCollector<Employee> dataCollector) {
         super(dataCollector);
     }
 
@@ -17,7 +17,7 @@ public class EmployeesHtmlReportProducerImpl extends HtmlDataProducerImpl {
 
         StringBuilder html = new StringBuilder();
 
-        html.append("<table>");
+        html.append("<table border=\"1\">");
         html.append("<tr>");
         html.append("<th>ID</th>");
         html.append("<th>Полное имя</th>");
@@ -27,14 +27,27 @@ public class EmployeesHtmlReportProducerImpl extends HtmlDataProducerImpl {
         html.append("<th>Подразделение</th>");
         html.append("</tr>");
 
-        List<Employee> employees = this.getDataCollector().getData();
+        List<Employee> employees = this.<Employee>getDataCollector().getData();
         for (Employee employee: employees) {
             html.append("<tr>");
-            html.append("<td>" + employee.fullName() + "</id>");
-            html.append("<td>" + employee.phoneNumber() + "</id>");
-            html.append("<td>" + employee.email() + "</id>");
-            html.append("<td>" + employee.currentJob() + "</id>");
-            html.append("<td>" + employee.currentDep() + "</id>");
+            html.append("<td>");
+            html.append(employee.id());
+            html.append("</id>");
+            html.append("<td>");
+            html.append(employee.fullName());
+            html.append("</id>");
+            html.append("<td>");
+            html.append(employee.phoneNumber());
+            html.append("</id>");
+            html.append("<td>");
+            html.append(employee.email());
+            html.append("</id>");
+            html.append("<td>");
+            html.append(employee.currentJob());
+            html.append("</id>");
+            html.append("<td>");
+            html.append(employee.currentDep());
+            html.append("</id>");
             html.append("</tr>");
         }
 

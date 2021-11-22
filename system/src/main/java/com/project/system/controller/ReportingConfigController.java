@@ -1,24 +1,25 @@
 package com.project.system.controller;
 
-import com.jayway.jsonpath.internal.JsonContext;
+import com.project.system.entity.ReportingConfig;
+import com.project.system.entity.Staff;
 import com.project.system.exceptions.ReportingResponseFailedException;
+import com.project.system.model.ReportingConfigDto;
+import com.project.system.model.StaffDto;
+import com.project.system.service.ReportStatusService;
 import com.project.system.service.ReportingConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/reporting")
@@ -26,15 +27,24 @@ import java.util.Arrays;
 @Api("Reports controller methods")
 public class ReportingConfigController {
     private final ReportingConfigService reportingConfigService;
+    private final ReportStatusService reportStatusService;
 
     @Value("${service.rabbit.url}")
     private String rabbitUrl;
+
+    @Value("${service.report.url}")
+    private String reportUrl;
 
     @GetMapping("/list")
     @ApiOperation("Reports list page")
     public String list(Model model) {
         var reportingConfigs = reportingConfigService.findAll();
-        model.addAttribute("reportingConfigs", reportingConfigs);
+        List<ReportingConfigDto> result = new ArrayList<>();
+        for (ReportingConfig config: reportingConfigs) {
+            result.add(new ReportingConfigDto(config, reportStatusService.findAllByConfig(config)));
+        }
+        model.addAttribute("reportingConfigsDto", result);
+        model.addAttribute("reportService", reportUrl);
 
         return "reports/list";
     }

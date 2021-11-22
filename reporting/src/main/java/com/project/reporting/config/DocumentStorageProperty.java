@@ -1,16 +1,18 @@
 package com.project.reporting.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 @ConfigurationProperties(prefix = "document")
 public class DocumentStorageProperty {
-    private String upload;
+    private String directory;
 
-    public String getUpload() {
-        return upload;
+    public String getDirectory() {
+        return directory;
     }
 
-    public void setUpload(String upload) {
-        this.upload = upload;
+    public void setDirectory(String directory) {
+        this.directory = directory;
     }
 }

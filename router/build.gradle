@@ -35,3 +35,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+bootJar {}
+
+sourceSets.main.java.srcDirs = ['src/main/java']

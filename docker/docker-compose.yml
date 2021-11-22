@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  system_app:
+    image: system-app
+    build:
+      context: "system"
+      dockerfile: Dockerfile
+    container_name: system-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - rabbit
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
+      - SPRING_DATASOURCE_USERNAME=postgres_user
+      - SPRING_DATASOURCE_PASSWORD=postgres_pass
+      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_GENERATE_DDL=false
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_DATA_REST_BASE_PATH=/api
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+      - FLYWAY_URL=jdbc:postgresql://db:5432/system_test
+      - FLYWAY_USER=postgres_user
+      - FLYWAY_PASSWORD=postgres_pass
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+      - SERVICE_RABBIT_URL=http://router-app:8081
+  router_app:
+    image: router-app
+    build:
+      context: "router"
+      dockerfile: Dockerfile
+    container_name: router-app
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+      - rabbit
+      - system_app
+    environment:
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
+      - SPRING_DATASOURCE_USERNAME=postgres_user
+      - SPRING_DATASOURCE_PASSWORD=postgres_pass
+      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_GENERATE_DDL=false
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_DATA_REST_BASE_PATH=/api
+      - SPRING_RABBITMQ_HOST=rabbit
+      - SPRING_RABBITMQ_USERNAME=rabbit
+      - SPRING_RABBITMQ_PASSWORD=rabbit
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+  reporting_app:
+    image: reporting-app
+    build:
+      context: "reporting"
+      dockerfile: Dockerfile
+    container_name: reporting-app
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+      - rabbit
+      - system_app
+      - router_app
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
+      - SPRING_DATASOURCE_USERNAME=postgres_user
+      - SPRING_DATASOURCE_PASSWORD=postgres_pass
+      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_GENERATE_DDL=false
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_DATA_REST_BASE_PATH=/api
+      - SPRING_RABBITMQ_HOST=rabbit
+      - SPRING_RABBITMQ_USERNAME=rabbit
+      - SPRING_RABBITMQ_PASSWORD=rabbit
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+  db:
+    image: postgres:13-alpine
+    container_name: db
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=system_test
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_pass
+  rabbit:
+    image: rabbitmq:3.8-management
+    #image: bitnami/rabbitmq:3.8
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbit
+      - RABBITMQ_DEFAULT_PASS=rabbit
+      #- RABBITMQ_USERNAME=rabbit
+      #- RABBITMQ_PASSWORD=rabbit
+      #- RABBITMQ_NODE_PORT_NUMBER=5672
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq/
+      - rabbit_log:/var/log/rabbitmq
+volumes:
+  database_data:
+    driver: local
+  rabbit_data:
+    driver: local
+  rabbit_log:
+    driver: local
+networks:
+  default:
+    name: custom_network

@@ -18,11 +18,6 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
     baseline-on-migrate: true
-  rabbitmq:
-    host: localhost
-    username: rabbit
-    password: rabbit
-    port: 5672
 logging:
   level:
     org:
@@ -30,3 +25,5 @@ logging:
 service:
   rabbit:
     url: http://localhost:8081
+  report:
+    url: http://localhost:8082
