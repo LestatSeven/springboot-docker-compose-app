@@ -2,7 +2,9 @@ package com.project.system.controller;
 
 import com.project.system.entity.ReportingConfig;
 import com.project.system.exceptions.ReportingResponseFailedException;
+import com.project.system.model.JsonReturnStatuses;
 import com.project.system.model.ReportingConfigDto;
+import com.project.system.model.ResponseDto;
 import com.project.system.service.ReportStatusService;
 import com.project.system.service.ReportingConfigService;
 import io.swagger.annotations.Api;
@@ -55,9 +57,8 @@ public class ReportingConfigController {
     public String sendRequestToMakeReport(@RequestParam("id") Integer id, Model model) {
         final String uri = String.format("%s/requests/send/%d", rabbitUrl, id);
         RestTemplate template = new RestTemplate();
-        String result = template.getForObject(uri, String.class);
-        log.info(result);
-        if(result.contains("\"status\":\"FAILED\"")) {
+        ResponseDto result = template.getForObject(uri, ResponseDto.class);
+        if (result != null && result.getStatus().equals(JsonReturnStatuses.FAILED)) {
             throw new ReportingResponseFailedException(String.format("Getting an error to send task to creating report id=[%d]: %s", id, result));
         }
 

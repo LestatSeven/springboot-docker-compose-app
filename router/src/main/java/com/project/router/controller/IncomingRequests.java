@@ -3,15 +3,18 @@ package com.project.router.controller;
 import com.project.router.config.RabbitConfig;
 import com.project.router.entity.ReportStatus;
 import com.project.router.entity.ReportingConfig;
-import com.project.router.model.Response;
 import com.project.router.model.JsonReturnStatuses;
+import com.project.router.model.ResponseDto;
 import com.project.router.service.ReportStatusService;
 import com.project.router.service.ReportingConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +28,7 @@ public class IncomingRequests {
     private final ReportingConfigService reportingConfigService;
 
     @GetMapping("/send/{id}")
-    public ResponseEntity getRequest(@PathVariable Integer id) {
+    public ResponseEntity<ResponseDto> getRequest(@PathVariable Integer id) {
         try {
             ReportingConfig reportingConfig = reportingConfigService.findById(id);
             ReportStatus reportStatus = ReportStatus.builder()
@@ -36,19 +39,19 @@ public class IncomingRequests {
 
             template.convertAndSend(RabbitConfig.QUEUE_NAME, reportStatus.getId());
 
-            Response response = Response.builder()
+            ResponseDto responseDto = ResponseDto.builder()
                             .status(JsonReturnStatuses.SUCCESSED)
                             .requestedId(id)
                             .reportStatusId(reportStatus.getId())
                             .build();
-            log.info(response.toString());
-            return ResponseEntity.ok(response);
+            log.info(responseDto.toString());
+            return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            Response response = Response.builder()
+            ResponseDto responseDto = ResponseDto.builder()
                     .status(JsonReturnStatuses.FAILED)
                     .text(e.getMessage())
                     .build();
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(responseDto);
         }
     }
 }

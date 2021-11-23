@@ -1,4 +1,4 @@
-package com.project.router.model;
+package com.project.system.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Response {
+public class ResponseDto {
     JsonReturnStatuses status;
     Integer requestedId;
     Integer reportStatusId;

@@ -25,7 +25,7 @@ public class ReportController {
     private final FileReader fileReader;
 
     @GetMapping("/{id}")
-    public ResponseEntity getReport(@PathVariable Integer id) {
+    public ResponseEntity<byte[]> getReport(@PathVariable Integer id) {
         log.info("getReport id: " + id);
         ReportStatus reportStatus = reportStatusService.findById(id);
 

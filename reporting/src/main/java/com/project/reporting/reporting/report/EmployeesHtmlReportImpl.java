@@ -57,7 +57,6 @@ public class EmployeesHtmlReportImpl extends HtmlReportImpl {
 
     @Override
     public String getFullReportName() {
-        System.out.println(reportStatus.getConfig());
         return reportStatus.getConfig().getReportName() + " - " + reportStatus.getDateRequest().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss")) + ".html";
     }
 
