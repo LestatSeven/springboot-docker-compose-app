@@ -46,7 +46,7 @@
                                                                 th:each="employee: ${employees}"
                                                                 th:value="${employee.getId()}"
                                                                 th:text="${employee.getFullName()}"
-                                                                th:selected="${employeeStaff.getEmployee() != null && employee != null && employee.getId() == employeeStaff.getEmployee().getId()}"
+                                                                th:selected="${employeeStaff.getEmployee() != null && employee != null && employee.getId().equals(employeeStaff.getEmployee().getId())}"
                                                         ></option>
                                                     </select>
                                                 </div>

@@ -59,7 +59,7 @@
                                                                 th:each="departmentParent: ${departmentsList}"
                                                                 th:value="${departmentParent.getId()}"
                                                                 th:text="${departmentParent.getName()}"
-                                                                th:selected="${department.getParent() != null && department.getParent().getId() == departmentParent.getId()}"
+                                                                th:selected="${department.getParent() != null && department.getParent().getId().equals(departmentParent.getId())}"
                                                         ></option>
                                                     </select>
                                                 </div>

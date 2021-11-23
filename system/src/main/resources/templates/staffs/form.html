@@ -45,7 +45,7 @@
                                                                 th:each="department: ${departments}"
                                                                 th:value="${department.getId()}"
                                                                 th:text="${department.getName()}"
-                                                                th:selected="${staff.getDepartment() != null && department != null && staff.getDepartment().getId() == department.getId()}"
+                                                                th:selected="${staff.getDepartment() != null && department != null && staff.getDepartment().getId().equals(department.getId())}"
                                                         ></option>
                                                     </select>
                                                 </div>
@@ -64,7 +64,7 @@
                                                                 th:each="profession: ${professions}"
                                                                 th:value="${profession.getId()}"
                                                                 th:text="${profession.getName()}"
-                                                                th:selected="${staff.getProfession() != null && profession != null && staff.getProfession().getId() == profession.getId()}"
+                                                                th:selected="${staff.getProfession() != null && profession != null && staff.getProfession().getId().equals(profession.getId())}"
                                                         ></option>
                                                     </select>
                                                 </div>
