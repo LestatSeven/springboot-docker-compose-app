@@ -1,19 +1,19 @@
 package com.project.system.controller;
 
 import com.project.system.entity.ReportingConfig;
-import com.project.system.entity.Staff;
 import com.project.system.exceptions.ReportingResponseFailedException;
 import com.project.system.model.ReportingConfigDto;
-import com.project.system.model.StaffDto;
 import com.project.system.service.ReportStatusService;
 import com.project.system.service.ReportingConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/reporting")
 @RequiredArgsConstructor
@@ -49,17 +50,18 @@ public class ReportingConfigController {
         return "reports/list";
     }
 
-    @GetMapping("/makeReport")
+    @PostMapping("/report/request")
     @ApiOperation("Send request to make report")
     public String sendRequestToMakeReport(@RequestParam("id") Integer id, Model model) {
         final String uri = String.format("%s/requests/send/%d", rabbitUrl, id);
         RestTemplate template = new RestTemplate();
         String result = template.getForObject(uri, String.class);
-        System.out.println(result);
+        log.info(result);
         if(result.contains("\"status\":\"FAILED\"")) {
             throw new ReportingResponseFailedException(String.format("Getting an error to send task to creating report id=[%d]: %s", id, result));
         }
 
         return "redirect:/reporting/list";
     }
+
 }

@@ -4,49 +4,45 @@ import com.project.reporting.config.RabbitConfig;
 import com.project.reporting.entity.ReportStatus;
 import com.project.reporting.reporting.report.Report;
 import com.project.reporting.reporting.report.ReportFactory;
+import com.project.reporting.reporting.saver.Saver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RabbitReceiverServiceImpl implements RabbitReceiverService {
     private final ReportStatusService reportStatusService;
     private final ReportFactory reportFactory;
+    private final Saver saver;
 
     @Override
     @RabbitListener(queues = RabbitConfig.QUEUE_NAME)
-    public void receiveMessage(String message) throws IOException {
-        System.out.printf("QUEUE \"%s\": %s%n", RabbitConfig.QUEUE_NAME, message);
-        ReportStatus reportStatus = reportStatusService.findById(Integer.valueOf(message));
-        reportStatus.setDateReceived(LocalDateTime.now());
-        reportStatusService.save(reportStatus);
-
-        Report report = reportFactory.getFactory(reportStatus);
-        report.getProducer().beforeStart(() -> {
-            reportStatus.setDateStart(LocalDateTime.now());
-            reportStatusService.save(reportStatus);
-        });
-        report.getCollector().collect();
-        report.getProducer().generateHeader(reportStatus.getConfig().getReportName() + " - " + reportStatus.getDateRequest().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH.mm.ss")));
-        report.getProducer().produce();
-        report.getProducer().generateFooter();
+    public void receiveMessage(String message) {
         try {
-            report.getProducer().save();
-        } catch (Exception e) {
-            reportStatus.setError(e.getMessage());
-            e.printStackTrace();
-            reportStatusService.save(reportStatus);
-        }
-        report.getProducer().afterEnd(() -> {
+            log.info("QUEUE \"{}\": {}", RabbitConfig.QUEUE_NAME, message);
+            ReportStatus reportStatus = reportStatusService.findById(Integer.valueOf(message));
+            reportStatus.setDateReceived(LocalDateTime.now());
+
+            Report report = reportFactory.getReport(reportStatus);
+
+            reportStatus.setDateStart(LocalDateTime.now());
+
+            String reportResult = report.generate();
+
+            reportStatus.setGeneratedName(report.getFullReportName());
+
+            saver.save(reportStatus, reportResult.getBytes(StandardCharsets.UTF_8));
+
             reportStatus.setDateEnd(LocalDateTime.now());
             reportStatusService.save(reportStatus);
-        });
+        } catch (Exception e) {
+            log.error("FAILED MESSAGE", e);
+        }
     }
 }

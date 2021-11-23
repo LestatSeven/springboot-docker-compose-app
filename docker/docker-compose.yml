@@ -17,12 +17,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
       - SPRING_DATASOURCE_USERNAME=postgres_user
       - SPRING_DATASOURCE_PASSWORD=postgres_pass
-      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_GENERATE_DDL=false
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
       - SPRING_DATA_REST_BASE_PATH=/api
-      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=debug
       - FLYWAY_URL=jdbc:postgresql://db:5432/system_test
       - FLYWAY_USER=postgres_user
       - FLYWAY_PASSWORD=postgres_pass
@@ -45,7 +44,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
       - SPRING_DATASOURCE_USERNAME=postgres_user
       - SPRING_DATASOURCE_PASSWORD=postgres_pass
-      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_GENERATE_DDL=false
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
@@ -53,7 +51,7 @@ services:
       - SPRING_RABBITMQ_HOST=rabbit
       - SPRING_RABBITMQ_USERNAME=rabbit
       - SPRING_RABBITMQ_PASSWORD=rabbit
-      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=debug
   reporting_app:
     image: reporting-app
     build:
@@ -72,7 +70,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/system_test
       - SPRING_DATASOURCE_USERNAME=postgres_user
       - SPRING_DATASOURCE_PASSWORD=postgres_pass
-      #- SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_GENERATE_DDL=false
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
@@ -81,6 +78,9 @@ services:
       - SPRING_RABBITMQ_USERNAME=rabbit
       - SPRING_RABBITMQ_PASSWORD=rabbit
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK=ERROR
+      - WEB_UPLOAD_PATH=/reports
+    volumes:
+      - reporting_data:/reports/
   db:
     image: postgres:13-alpine
     container_name: db
@@ -95,13 +95,9 @@ services:
       - POSTGRES_PASSWORD=postgres_pass
   rabbit:
     image: rabbitmq:3.8-management
-    #image: bitnami/rabbitmq:3.8
     environment:
       - RABBITMQ_DEFAULT_USER=rabbit
       - RABBITMQ_DEFAULT_PASS=rabbit
-      #- RABBITMQ_USERNAME=rabbit
-      #- RABBITMQ_PASSWORD=rabbit
-      #- RABBITMQ_NODE_PORT_NUMBER=5672
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -114,6 +110,8 @@ volumes:
   rabbit_data:
     driver: local
   rabbit_log:
+    driver: local
+  reporting_data:
     driver: local
 networks:
   default:

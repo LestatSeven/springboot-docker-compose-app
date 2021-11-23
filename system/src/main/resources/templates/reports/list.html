@@ -39,11 +39,13 @@
                                         <td>
                                             <a th:text="${reportConfigDto.getReportingConfig().getReportName()}" onclick="toggle(this);" style="text-decoration: underline !important; cursor:pointer;"></a>
                                             <div th:each="reportStatus: ${reportConfigDto.getReportStatusList()}">
-                                                <a th:text="${reportStatus.getGeneratedName()}" th:href="@{{url}/reports/{generated}(url=${reportService}, generated=${reportStatus.getGeneratedName() + '.html'})}"></a>
+                                                <a th:text="${reportStatus.getGeneratedName()}" th:href="@{{url}/report/{id}(url=${reportService}, id=${reportStatus.getId()})}"></a>
                                             </div>
                                         </td>
                                         <td>
-                                            <a th:href="@{/reporting/makeReport(id=${reportConfigDto.getReportingConfig().getId()})}" class="btn btn-outline-info">Сформировать отчёт</a>
+                                            <form method="POST" th:action="@{/reporting/report/request/(id=${reportConfigDto.getReportingConfig().getId()})}">
+                                                <button type="submit" name="submit" class="btn btn-outline-info">Сформировать отчёт</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 </tbody>

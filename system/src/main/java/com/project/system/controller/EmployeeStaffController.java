@@ -54,7 +54,7 @@ public class EmployeeStaffController {
         }
 
         var searchedEmployeeStaffs = employeeStaffService.findAllByEmployee(employeeStaff.getEmployee());
-        searchedEmployeeStaffs.removeIf(employeeStaff1 -> employeeStaff1.getId() == employeeStaff.getId());
+        searchedEmployeeStaffs.removeIf(employeeStaff1 -> employeeStaff1.getId().equals(employeeStaff.getId()));
 
         for (EmployeeStaff searchedEmployeeStaff: searchedEmployeeStaffs) {
             LocalDate searchedDateEnd = Optional.ofNullable(searchedEmployeeStaff.getDateEnd()).orElse(LocalDate.MAX);

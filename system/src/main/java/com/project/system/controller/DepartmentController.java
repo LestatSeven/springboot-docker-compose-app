@@ -31,11 +31,11 @@ public class DepartmentController {
     @ApiOperation("Saving new or edited profession object")
     public String save(@ModelAttribute("department") Department department) {
         Department rootDepartment = departmentService.findRoot();
-        if (rootDepartment != null && department.getParent() != null && rootDepartment.getId() == department.getId()) {
+        if (rootDepartment != null && department.getParent() != null && rootDepartment.getId().equals(department.getId())) {
             throw new DepartmentRootUnnullParentException(String.format("Attempt to change parent id in root department: %s", rootDepartment.getId()));
         }
 
-        if(rootDepartment != null && department.getParent() == null && rootDepartment.getId() != department.getId()) {
+        if(rootDepartment != null && department.getParent() == null && !rootDepartment.getId().equals(department.getId())) {
             throw new DepartmentFewRootException(String.format("Attempt to make few root departments: %s", department.getId()));
         }
 
@@ -69,7 +69,7 @@ public class DepartmentController {
     public String showUpdateForm(@RequestParam("id") Integer id, Model model) {
         Department department = departmentService.findById(id);
         var departments = departmentService.findAll();
-        departments.removeIf(dep -> dep.getId() == department.getId());
+        departments.removeIf(dep -> dep.getId().equals(department.getId()));
 
         model.addAttribute("department", department);
         model.addAttribute("departmentsList", departments);

@@ -1,15 +1,17 @@
 package com.project.system;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@Slf4j
 @SpringBootApplication
 public class SystemApplication {
 
 	public static void main(String[] args) {
 		long start = System.nanoTime();
-		System.out.println("http://localhost:8080");
+		log.info("http://localhost:8080");
 		SpringApplication.run(SystemApplication.class, args);
-		System.out.printf("Startup: %s ms%n", (System.nanoTime() - start) / 1_000_000);
+		log.info("Startup: {} ms", (System.nanoTime() - start) / 1_000_000);
 	}
 }

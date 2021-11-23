@@ -3,25 +3,20 @@ package com.project.reporting.reporting.collector;
 import com.project.reporting.reporting.model.Employee;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.util.List;
 
-@Component
-public class EmployeesDatabaseDataCollectorImpl<T> implements DatabaseDataCollector<Employee> {
+@Service
+public class EmployeesDatabaseDataCollectorImpl implements DataCollector<Employee>{
     private final JdbcTemplate jdbcTemplate;
-    private String query;
-    private RowMapper<Employee> employeeRowMapper;
-    private List<Employee> data;
+    private final String query;
+    private final RowMapper<Employee> employeeRowMapper;
 
     public EmployeesDatabaseDataCollectorImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public void collect() {
-        this.query = """
+        query = """
             select
                 e.id,
                 e.last_name || ' ' || e.first_name || ' ' || e.middle_name as full_name,
@@ -40,7 +35,8 @@ public class EmployeesDatabaseDataCollectorImpl<T> implements DatabaseDataCollec
             join departments d on d.id = s.department_id
             order by dep_name, full_name
          """;
-        this.employeeRowMapper = (ResultSet resultSet, int rowNum) -> {
+
+        employeeRowMapper = (ResultSet resultSet, int rowNum) -> {
             return new Employee(
                     resultSet.getInt("id"),
                     resultSet.getString("full_name"),
@@ -50,16 +46,9 @@ public class EmployeesDatabaseDataCollectorImpl<T> implements DatabaseDataCollec
                     resultSet.getString("dep_name")
             );
         };
-        this.collect(this.query, this.employeeRowMapper);
     }
 
-    @Override
-    public void collect(String query, RowMapper<Employee> mapper) {
-        data = jdbcTemplate.query(query, employeeRowMapper);
-    }
-
-    @Override
     public List<Employee> getData() {
-        return data;
+        return jdbcTemplate.query(query, employeeRowMapper);
     }
 }

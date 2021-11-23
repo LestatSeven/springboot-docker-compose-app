@@ -1,22 +1,25 @@
 package com.project.reporting.reporting.report;
 
 import com.project.reporting.entity.ReportStatus;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.reporting.reporting.collector.EmployeesDatabaseDataCollectorImpl;
+import com.project.reporting.reporting.collector.StaffEmployeesDataCollectorImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReportFactory<T> {
-    @Autowired
-    private EmployeesHtmlReport<T> employeesHtmlReport;
+@RequiredArgsConstructor
+public class ReportFactory {
+    private final EmployeesDatabaseDataCollectorImpl employeesDatabaseDataCollector;
+    private final StaffEmployeesDataCollectorImpl staffEmployeesDataCollector;
 
-    public Report<T> getFactory(ReportStatus reportStatus) {
+    public Report getReport(ReportStatus reportStatus) {
         switch (reportStatus.getConfig().getReportShort()) {
             case "employees_list":
-                return (Report<T>) employeesHtmlReport;
+                return new EmployeesHtmlReportImpl(reportStatus, employeesDatabaseDataCollector);
+            case "staff_employees_list":
+                return new StaffEmployeesHtmlReportImpl(reportStatus, staffEmployeesDataCollector);
             default:
                 throw new IllegalArgumentException("Wrong type of report: " + reportStatus.getConfig().getReportShort());
         }
-
-        //return null;
     }
 }
