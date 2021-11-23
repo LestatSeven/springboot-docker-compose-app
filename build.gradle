@@ -19,24 +19,22 @@ test {
 }
 
 task buildAllProjects {
-    dependsOn createTriggerTask('A', '/system/build.gradle', ['bootJar'])
-    dependsOn createTriggerTask('B', '/router/build.gradle', ['bootJar'])
-    dependsOn createTriggerTask('C', '/reporting/build.gradle', ['bootJar'])
-    copyJarToDocker('system-0.0.1-SNAPSHOT.jar', '/system/build/libs', '/docker/system')
-    copyJarToDocker('router-0.0.1-SNAPSHOT.jar', '/router/build/libs', '/docker/router')
-    copyJarToDocker('reporting-0.0.1-SNAPSHOT.jar', '/reporting/build/libs', '/docker/reporting')
+    dependsOn createTask('system')
+    dependsOn createTask('router')
+    dependsOn createTask('reporting')
 }
 
-def copyJarToDocker(jar, folderFrom, folderTo) {
-    copy {
-        from folderFrom + '/' + jar
-        into folderTo
-    }
-}
+def createTask(projectName) {
+    def dockerRoot = '/docker/'
+    def projectJarName = projectName + '-0.0.1-SNAPSHOT.jar'
 
-def createTriggerTask(projectName, relativeBuildFilePath, tasksToTrigger) {
     tasks.register("trigger${projectName}", GradleBuild) {
-        buildFile = relativeBuildFilePath
-        tasks = tasksToTrigger
+        delete files(dockerRoot + projectName + '/' + projectJarName)
+        buildFile = '/' + projectName + '/build.gradle'
+        tasks = ['bootJar']
+        copy {
+            from '/' + projectName + '/build/libs/' + projectJarName
+            into '/docker/' + projectName
+        }
     }
 }
